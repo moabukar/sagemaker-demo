@@ -2,16 +2,7 @@
 
 SageMaker Studio env demo with end-to-end ML workflow automation.
 
-## Quick Start
-
-### Prerequisites
-
-- AWS CLI configured with appropriate credentials
-- Terraform >= 1.6.6
-- Python >= 3.11
-- make (optional, for convenience commands)
-
-### Installation
+## Setup & Deploy
 
 ```bash
 # setup env
@@ -27,7 +18,7 @@ export ROLE_ARN=$(cd terraform && terraform output -raw execution_role_arn)
 make demo BUCKET=$BUCKET ROLE_ARN=$ROLE_ARN REGION=eu-west-2
 ```
 
-### Access Studio
+### SM Studio access
 
 ```bash
 
