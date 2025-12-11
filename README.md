@@ -35,8 +35,6 @@ aws sagemaker create-presigned-domain-url \
 
 ## Development
 
-### Dev
-
 ```bash
 # Install development dependencies
 make install-dev
