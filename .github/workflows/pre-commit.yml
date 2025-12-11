@@ -25,7 +25,7 @@ jobs:
           terraform_version: 1.6.6
 
       - name: Install TFLint
-        uses: terraform-linters/setup-tflint@v4
+        uses: terraform-linters/setup-tflint@v6
 
       - name: Run pre-commit
         uses: pre-commit/action@v3.0.0
