@@ -14,10 +14,10 @@ SageMaker Studio env demo with end-to-end ML workflow automation.
 ### Installation
 
 ```bash
-# Setup environment
+# setup env
 make setup
 
-# Deploy infrastructure
+# deploy infra
 make tf-init
 make tf-apply
 
@@ -30,7 +30,8 @@ make demo BUCKET=$BUCKET ROLE_ARN=$ROLE_ARN REGION=eu-west-2
 ### Access Studio
 
 ```bash
-# Generate presigned URL
+
+# generate presigned URL
 DOMAIN_ID=$(cd terraform && terraform output -raw domain_id)
 
 aws sagemaker create-presigned-domain-url \
@@ -67,18 +68,6 @@ make test-integration
 pytest tests/ --cov=scripts --cov-report=html
 ```
 
-## Architecture
-
-See [docs/architecture.md](docs/architecture.md) for detailed architecture documentation.
-
-### Key Components
-
-- **SageMaker Studio Domain** – Multi-user ML development environment
-- **IAM Roles** – Least privilege access for Studio and training jobs
-- **S3 Buckets** – Versioned storage for data and model artifacts
-- **VPC Configuration** – Network isolation with VPC endpoints
-- **CloudWatch** – Centralized logging and monitoring
-
 ## Usage Examples
 
 ### Training a Model
@@ -107,84 +96,50 @@ result = predictor.predict(test_data)
 
 See [notebooks/](notebooks/) for complete examples.
 
-## Configuration
-
-### Terraform Variables
-
-Key variables in `terraform/variables.tf`:
-
-- `project_name` – Resource naming prefix
-- `region` – AWS region
-- `enable_vpc_mode` – Enable VPC networking
-- `default_instance_type` – Default compute instance type
-
-### Environment-Specific Config
-
-Different configurations for dev/staging/prod in `terraform/environments/`.
-
-## Monitoring
-
-### CloudWatch Dashboards
-```bash
-# View training job logs
-aws logs tail /aws/sagemaker/TrainingJobs --follow
-
-# View endpoint logs
-aws logs tail /aws/sagemaker/Endpoints/demo-endpoint --follow
-```
-
-### Metrics
-
-Key metrics monitored:
-- Endpoint invocations and latency
-- Training job duration and resource utilization
-- Model accuracy and performance
-
-## Troubleshooting
-
-See [docs/troubleshooting.md](docs/troubleshooting.md) for common issues and solutions.
-
 ### Common Issues
 
 **Domain creation fails**
+
 ```bash
-# Check VPC endpoint configuration
+# vpc endpoints
 aws ec2 describe-vpc-endpoints --filters "Name=vpc-id,Values=$VPC_ID"
 ```
 
 **Training job fails**
+
 ```bash
-# Check CloudWatch logs
+# cloudwatch logs
 aws logs tail /aws/sagemaker/TrainingJobs/<job-name> --follow
 ```
 
-## Cost Optimisation
+## Make commands
 
-- Enable auto-stop for idle KernelGateway apps (1 hour timeout)
-- Use spot instances for training jobs
-- Right-size endpoint instances based on traffic
-- Enable S3 lifecycle policies for old artifacts
-
-Estimated costs:
-- Studio Domain: $0/month (metadata only)
-- KernelGateway: ~$0.05/hour (ml.t3.medium)
-- Training: ~$0.23/hour (ml.m5.large)
-- Endpoint: ~$0.23/hour (ml.m5.large)
-
-
-### Security Features
-
-- VPC isolation with private subnets
-- IAM roles with least privilege
-- S3 bucket encryption at rest
-- VPC endpoints for AWS service access
-- No public internet access for compute
-
-## Roadmap
-
-- [ ] Multi-model endpoints
-- [ ] Model monitoring with drift detection
-- [ ] SageMaker Pipelines integration
-- [ ] Feature Store implementation
-- [ ] A/B testing capabilities
-- [ ] Cost analysis dashboard
+| Command | Description | Usage Example |
+|---------|-------------|---------------|
+| `make help` | Show all available commands with descriptions | `make help` |
+| **Setup & Installation** | | |
+| `make install` | Install production dependencies only | `make install` |
+| `make install-dev` | Install development dependencies + pre-commit hooks | `make install-dev` |
+| `make setup` | Complete setup (install-dev + tf-init) | `make setup` |
+| **Code Quality** | | |
+| `make format` | Auto-format Python code (black + isort) | `make format` |
+| `make format-check` | Check formatting without modifying files | `make format-check` |
+| `make lint` | Run all linters (flake8, mypy, bandit) | `make lint` |
+| `make security` | Run security checks (bandit + detect-secrets) | `make security` |
+| `make pre-commit` | Run all pre-commit hooks on all files | `make pre-commit` |
+| `make ci` | Run all CI checks (format-check, lint, test, security) | `make ci` |
+| **Testing** | | |
+| `make test` | Run all tests with coverage report | `make test` |
+| `make test-unit` | Run unit tests only | `make test-unit` |
+| `make test-integration` | Run integration tests only | `make test-integration` |
+| **Terraform** | | |
+| `make tf-init` | Initialize Terraform | `make tf-init` |
+| `make tf-validate` | Validate Terraform configuration | `make tf-validate` |
+| `make tf-fmt` | Format Terraform files | `make tf-fmt` |
+| `make tf-plan` | Preview Terraform changes | `make tf-plan` |
+| `make tf-apply` | Apply Terraform configuration (deploy) | `make tf-apply` |
+| `make tf-destroy` | Destroy all Terraform resources | `make tf-destroy` |
+| `make tf-output` | Show Terraform outputs as JSON | `make tf-output` |
+| **Demo & Cleanup** | | |
+| `make demo` | Run end-to-end demo script (requires BUCKET, ROLE_ARN, REGION) | `make demo BUCKET=my-bucket ROLE_ARN=arn:aws:iam::123:role/SageMaker REGION=eu-west-2` |
+| `make clean` | Remove Python cache files and build artifacts | `make clean` |
