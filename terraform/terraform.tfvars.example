@@ -1,0 +1,18 @@
+# Copy this file to terraform.tfvars and customise
+
+project_name = "sagemaker-demo"
+region       = "eu-west-2"
+
+user_profiles = ["mo", "data-scientist", "ml-engineer"]
+
+default_instance_type = "ml.t3.medium"
+
+enable_vpc_mode = false
+# vpc_id          = "vpc-xxxxx"
+# subnet_ids      = ["subnet-xxxxx", "subnet-yyyyy"]
+
+tags = {
+  Team        = "ML Platform"
+  CostCenter  = "Engineering"
+  Environment = "dev"
+}
